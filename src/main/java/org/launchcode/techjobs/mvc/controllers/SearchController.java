@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 
 import static org.launchcode.techjobs.mvc.controllers.ListController.columnChoices;
-import static org.launchcode.techjobs.mvc.models.JobData.findAll;
-import static org.launchcode.techjobs.mvc.models.JobData.findByColumnAndValue;
 
 /**
  * Created by LaunchCode
@@ -31,17 +29,20 @@ public class SearchController {
     // TODO #3 - Create a handler to process a search request and render the updated search view.
 
     @PostMapping(value = "results")
-    public String displaySearchResults(Model model, @RequestParam String searchType, @RequestParam String searchTerm){
+    public String displaySearchResults(Model model, @RequestParam String searchType, @RequestParam String searchTerm) {
         ArrayList<Job> jobs = new ArrayList<>();
+
         if (searchTerm.equals("all") || searchTerm.equals("")) {
             jobs = JobData.findAll();
-            model.addAttribute("title", "All jobs");
-        }else {
+            model.addAttribute("title", "All Jobs");
+        } else {
             jobs = JobData.findByColumnAndValue(searchType, searchTerm);
-            model.addAttribute("title", "Search term: " + searchTerm);
+            model.addAttribute("title", "SearchTerm: " + searchTerm + " - Filter: " + columnChoices.get(searchType));
         }
         model.addAttribute("jobs", jobs);
+        model.addAttribute("columns", columnChoices);
 
         return "search";
     }
+
 }
